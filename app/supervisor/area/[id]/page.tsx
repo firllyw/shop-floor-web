@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
+import api from "@/lib/api";
 import dynamic from "next/dynamic";
 import { Save, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -27,7 +27,7 @@ export default function EditAreaPage() {
 
   const fetchArea = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/v1/areas/${id}`);
+      const res = await api.get(`/areas/${id}`);
       setFormData({
         name: res.data.name || "",
         description: res.data.description || ""
@@ -43,7 +43,7 @@ export default function EditAreaPage() {
     if (e) e.preventDefault();
     setIsSaving(true);
     try {
-      await axios.put(`http://localhost:3000/api/v1/areas/${id}`, formData);
+      await api.put(`/areas/${id}`, formData);
       showAlert("Success", "Area details saved successfully!", "success");
     } catch (error) {
       console.error("Failed to update area", error);

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Search } from "lucide-react";
-import axios from "axios";
+import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/components/ModalProvider";
 
@@ -22,7 +22,7 @@ export default function AreaManagement() {
 
   const fetchAreas = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/areas");
+      const res = await api.get("/areas");
       setAreas(res.data);
     } catch (error) {
       console.error("Failed to fetch areas", error);
@@ -47,9 +47,9 @@ export default function AreaManagement() {
     e.preventDefault();
     try {
       if (editingArea) {
-        await axios.put(`http://localhost:3000/api/v1/areas/${editingArea.id}`, formData);
+        await api.put(`/areas/${editingArea.id}`, formData);
       } else {
-        await axios.post("http://localhost:3000/api/v1/areas", formData);
+        await api.post("/areas", formData);
       }
       handleCloseModal();
       fetchAreas();
@@ -64,7 +64,7 @@ export default function AreaManagement() {
       "Are you sure you want to delete this area?",
       async () => {
         try {
-          await axios.delete(`http://localhost:3000/api/v1/areas/${id}`);
+          await api.delete(`/areas/${id}`);
           fetchAreas();
         } catch (error) {
           console.error("Failed to delete area", error);

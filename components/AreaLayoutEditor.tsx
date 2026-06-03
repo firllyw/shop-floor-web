@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Stage, Layer, Rect, Text, Group, Transformer } from "react-konva";
-import axios from "axios";
+import api from "@/lib/api";
 import { Save, PlusSquare, Map, Settings2 } from "lucide-react";
 import { useModal } from "@/components/ModalProvider";
 
@@ -118,12 +118,12 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
 
   const fetchData = async () => {
     try {
-      const areaRes = await axios.get(`http://localhost:3000/api/v1/areas/${areaId}`);
+      const areaRes = await api.get(`/areas/${areaId}`);
       if (areaRes.data.layoutState && areaRes.data.layoutState.zones) {
         setZones(areaRes.data.layoutState.zones);
       }
 
-      const treeRes = await axios.get(`http://localhost:3000/api/v1/assets/tree`);
+      const treeRes = await api.get(`/assets/tree`);
       const flatten = (nodes: any[]): any[] => {
         let result: any[] = [];
         nodes.forEach((node) => {
@@ -189,10 +189,10 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
         };
       });
       if (assetPayload.length > 0) {
-        await axios.put("http://localhost:3000/api/v1/assets/positions", assetPayload);
+        await api.put("/assets/positions", assetPayload);
       }
 
-      await axios.put(`http://localhost:3000/api/v1/areas/${areaId}/layout`, {
+      await api.put(`/areas/${areaId}/layout`, {
         layoutState: { zones },
       });
 
@@ -259,7 +259,7 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
           "Remove Machine",
           "Remove this machine from the layout? It will return to the unplaced list.",
           () => {
-            axios.put(`http://localhost:3000/api/v1/assets/positions`, [{ id: selectedId, posX: null, posY: null, areaId: null }])
+            api.put(`/assets/positions`, [{ id: selectedId, posX: null, posY: null, areaId: null }])
             .then(() => {
                setAllAssets(allAssets.map(a => a.id === selectedId ? { ...a, areaId: null, posX: null, posY: null } : a));
                setSelectedId(null);

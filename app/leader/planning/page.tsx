@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 import dynamic from "next/dynamic";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Save } from "lucide-react";
@@ -30,9 +30,9 @@ export default function MonthlyPlanningPage() {
   const fetchInitialData = async () => {
     try {
       const [areasRes, templatesRes, usersRes] = await Promise.all([
-        axios.get("http://localhost:3000/api/v1/areas"),
-        axios.get("http://localhost:3000/api/v1/task-templates"),
-        axios.get("http://localhost:3000/api/v1/users")
+        api.get("/areas"),
+        api.get("/task-templates"),
+        api.get("/users")
       ]);
       setAreas(areasRes.data);
       if (areasRes.data.length > 0) setSelectedArea(areasRes.data[0].id);
@@ -53,7 +53,7 @@ export default function MonthlyPlanningPage() {
     const d = new Date(selectedDate);
     
     try {
-      await axios.post("http://localhost:3000/api/v1/tasks/bulk", {
+      await api.post("/tasks/bulk", {
         areaId: selectedArea,
         month: d.getMonth() + 1,
         year: d.getFullYear(),

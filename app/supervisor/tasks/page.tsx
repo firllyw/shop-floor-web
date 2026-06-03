@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/lib/api";
 import { format } from "date-fns";
 import { useModal } from "@/components/ModalProvider";
 import { Search, MapPin, Wrench, Calendar as CalendarIcon, User, X } from "lucide-react";
@@ -144,7 +144,7 @@ export default function KanbanBoard() {
 
   const fetchAreas = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/areas");
+      const res = await api.get("/areas");
       setAreas(res.data);
       if (res.data.length > 0) {
         setSelectedArea(res.data[0].id);
@@ -156,7 +156,7 @@ export default function KanbanBoard() {
 
   const fetchTasks = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/v1/tasks/kanban?areaId=${selectedArea}&date=${selectedDate}`);
+      const res = await api.get(`/tasks/kanban?areaId=${selectedArea}&date=${selectedDate}`);
       setTasks(res.data);
     } catch (error) {
       console.error("Failed to fetch tasks", error);
@@ -165,7 +165,7 @@ export default function KanbanBoard() {
 
   const updateTaskStatus = async (taskId: string, status: string, notes?: string) => {
     try {
-      await axios.patch(`http://localhost:3000/api/v1/tasks/${taskId}/status`, { status, notes });
+      await api.patch(`/tasks/${taskId}/status`, { status, notes });
     } catch (error) {
       console.error("Failed to update status", error);
       // Revert if failed (simplified: just refetch)

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Search } from "lucide-react";
-import axios from "axios";
+import api from "@/lib/api";
 import { useModal } from "@/components/ModalProvider";
 
 export default function ToolManagement() {
@@ -20,7 +20,7 @@ export default function ToolManagement() {
 
   const fetchTools = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/tools");
+      const res = await api.get("/tools");
       setTools(res.data);
     } catch (error) {
       console.error("Failed to fetch tools", error);
@@ -47,9 +47,9 @@ export default function ToolManagement() {
     e.preventDefault();
     try {
       if (editingTool) {
-        await axios.put(`http://localhost:3000/api/v1/tools/${editingTool.id}`, formData);
+        await api.put(`/tools/${editingTool.id}`, formData);
       } else {
-        await axios.post("http://localhost:3000/api/v1/tools", formData);
+        await api.post("/tools", formData);
       }
       handleCloseModal();
       fetchTools();
@@ -64,7 +64,7 @@ export default function ToolManagement() {
       "Are you sure you want to delete this tool?",
       async () => {
         try {
-          await axios.delete(`http://localhost:3000/api/v1/tools/${id}`);
+          await api.delete(`/tools/${id}`);
           fetchTools();
         } catch (error) {
           console.error("Failed to delete tool", error);
