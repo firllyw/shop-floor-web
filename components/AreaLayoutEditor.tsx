@@ -11,8 +11,8 @@ interface AreaLayoutEditorProps {
 }
 
 const RectangleNode = ({ shapeProps, isSelected, onSelect, onChange }: any) => {
-  const shapeRef = useRef<any>();
-  const trRef = useRef<any>();
+  const shapeRef = useRef<any>(null);
+  const trRef = useRef<any>(null);
 
   useEffect(() => {
     if (isSelected && trRef.current) {
