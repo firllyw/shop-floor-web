@@ -47,9 +47,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Users className="w-5 h-5 mr-3" />
                 User Management
               </Link>
-              <Link href="/supervisor/area" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/supervisor/area') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
+              <Link href="/supervisor/line-setup" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/supervisor/line-setup') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
                 <Map className="w-5 h-5 mr-3" />
-                Area Management
+                Line Management
               </Link>
               <Link href="/supervisor/tool" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/supervisor/tool') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
                 <Wrench className="w-5 h-5 mr-3" />
@@ -66,9 +66,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div>
             <div className="px-3 mb-2 text-xs font-semibold tracking-wider text-slate-500 uppercase">Operations</div>
             <div className="space-y-1">
-              <Link href="/supervisor/tasks" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/supervisor/tasks') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
+              <Link href="/operator/line-board" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/operator/line-board') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
                 <KanbanSquare className="w-5 h-5 mr-3" />
-                Task Execution Board
+                Line Digital Board
               </Link>
               <Link href="/leader/planning" className={`flex items-center px-3 py-2 rounded-xl transition-colors ${isCurrent('/leader/planning') ? 'bg-slate-800 text-white' : 'hover:bg-slate-800/50 hover:text-white'}`}>
                 <CalendarDays className="w-5 h-5 mr-3" />
