@@ -6,8 +6,8 @@ import api from "@/lib/api";
 import { Save, PlusSquare, Map, Settings2 } from "lucide-react";
 import { useModal } from "@/components/ModalProvider";
 
-interface AreaLayoutEditorProps {
-  areaId: string;
+interface LineLayoutEditorProps {
+  lineId: string;
 }
 
 const RectangleNode = ({ shapeProps, isSelected, onSelect, onChange }: any) => {
@@ -104,7 +104,7 @@ const RectangleNode = ({ shapeProps, isSelected, onSelect, onChange }: any) => {
   );
 };
 
-export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
+export default function AreaLayoutEditor({ lineId }: LineLayoutEditorProps) {
   const stageRef = useRef<any>(null);
   const [allAssets, setAllAssets] = useState<any[]>([]);
   const [zones, setZones] = useState<any[]>([]);
@@ -114,11 +114,11 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
 
   useEffect(() => {
     fetchData();
-  }, [areaId]);
+  }, [lineId]);
 
   const fetchData = async () => {
     try {
-      const areaRes = await api.get(`/areas/${areaId}`);
+      const areaRes = await api.get(`/areas/${lineId}`);
       if (areaRes.data.layoutState && areaRes.data.layoutState.zones) {
         setZones(areaRes.data.layoutState.zones);
       }
@@ -138,8 +138,8 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
     }
   };
 
-  const placedAssets = allAssets.filter(a => a.areaId === areaId && a.posX !== null && a.posY !== null);
-  const unplacedAssets = allAssets.filter(a => (a.areaId === areaId && (a.posX === null || a.posY === null)) || !a.areaId);
+  const placedAssets = allAssets.filter(a => a.lineId === lineId && a.posX !== null && a.posY !== null);
+  const unplacedAssets = allAssets.filter(a => (a.lineId === lineId && (a.posX === null || a.posY === null)) || !a.lineId);
 
   const handleDrop = async (e: any) => {
     e.preventDefault();
@@ -153,14 +153,14 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
       const assetId = e.dataTransfer.getData("assetId");
       setAllAssets(allAssets.map(a => 
         a.id === assetId 
-          ? { ...a, areaId: areaId, posX: pos.x, posY: pos.y }
+          ? { ...a, lineId: lineId, posX: pos.x, posY: pos.y }
           : a
       ));
     } else if (type === "zone") {
       const newZone = {
         id: `zone_${Date.now()}`,
         type: "zone",
-        name: "New Area Zone",
+        name: "New Line Zone",
         x: pos.x,
         y: pos.y,
         width: 300,
@@ -180,7 +180,7 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
         const attrs = a.attributes || {};
         return {
           id: a.id,
-          areaId: a.areaId,
+          areaId: a.lineId, // The API expects areaId in body mapping
           posX: a.posX,
           posY: a.posY,
           width: attrs.width,
@@ -192,7 +192,7 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
         await api.put("/assets/positions", assetPayload);
       }
 
-      await api.put(`/areas/${areaId}/layout`, {
+      await api.put(`/areas/${lineId}/layout`, {
         layoutState: { zones },
       });
 
@@ -261,7 +261,7 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
           () => {
             api.put(`/assets/positions`, [{ id: selectedId, posX: null, posY: null, areaId: null }])
             .then(() => {
-               setAllAssets(allAssets.map(a => a.id === selectedId ? { ...a, areaId: null, posX: null, posY: null } : a));
+               setAllAssets(allAssets.map(a => a.id === selectedId ? { ...a, lineId: null, posX: null, posY: null } : a));
                setSelectedId(null);
             });
           }
@@ -356,7 +356,7 @@ export default function AreaLayoutEditor({ areaId }: AreaLayoutEditorProps) {
                     <span className="truncate">{asset.name}</span>
                   </div>
                   <div className="text-xs text-gray-500 flex items-center justify-between">
-                    <span>{asset.areaId ? 'Assigned' : 'Unassigned'}</span>
+                    <span>{asset.lineId ? 'Assigned' : 'Unassigned'}</span>
                     <span className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">Drag</span>
                   </div>
                 </div>

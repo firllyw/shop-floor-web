@@ -8,9 +8,9 @@ import { Save, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useModal } from "@/components/ModalProvider";
 
-const AreaLayoutEditor = dynamic(() => import("@/components/AreaLayoutEditor"), { ssr: false });
+const LineLayoutEditor = dynamic(() => import("@/components/AreaLayoutEditor"), { ssr: false });
 
-export default function EditAreaPage() {
+export default function EditLinePage() {
   const { id } = useParams();
   const router = useRouter();
   const { showAlert } = useModal();
@@ -21,11 +21,11 @@ export default function EditAreaPage() {
 
   useEffect(() => {
     if (id) {
-      fetchArea();
+      fetchLine();
     }
   }, [id]);
 
-  const fetchArea = async () => {
+  const fetchLine = async () => {
     try {
       const res = await api.get(`/areas/${id}`);
       setFormData({
@@ -33,7 +33,7 @@ export default function EditAreaPage() {
         description: res.data.description || ""
       });
     } catch (error) {
-      console.error("Failed to fetch area", error);
+      console.error("Failed to fetch line", error);
     } finally {
       setIsLoading(false);
     }
@@ -44,26 +44,26 @@ export default function EditAreaPage() {
     setIsSaving(true);
     try {
       await api.put(`/areas/${id}`, formData);
-      showAlert("Success", "Area details saved successfully!", "success");
+      showAlert("Success", "Line details saved successfully!", "success");
     } catch (error) {
-      console.error("Failed to update area", error);
+      console.error("Failed to update line", error);
       showAlert("Error", "Failed to save changes.", "error");
     } finally {
       setIsSaving(false);
     }
   };
 
-  if (isLoading) return <div className="p-12 text-center text-gray-500">Loading Area...</div>;
+  if (isLoading) return <div className="p-12 text-center text-gray-500">Loading Line...</div>;
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex items-center space-x-4 mb-4">
-        <Link href="/supervisor/area" className="p-2 text-gray-500 hover:text-blue-600 bg-white rounded-full border shadow-sm">
+        <Link href="/supervisor/line-setup" className="p-2 text-gray-500 hover:text-blue-600 bg-white rounded-full border shadow-sm">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-800">Edit Area</h1>
-          <p className="text-muted-foreground text-gray-500">Update area details and configure its Gemba Layout map.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-800">Edit Line Setup</h1>
+          <p className="text-muted-foreground text-gray-500">Update line details and configure its Gemba Layout map.</p>
         </div>
       </div>
 
@@ -71,11 +71,11 @@ export default function EditAreaPage() {
         
         {/* Top: Details Form */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">Area Details</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Line Details</h2>
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Area Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Line Name</label>
                 <input
                   type="text"
                   required
@@ -111,11 +111,11 @@ export default function EditAreaPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-800">Gemba Layout Mapper</h2>
-            <p className="text-sm text-gray-500 italic">Drag and drop assets to configure the physical layout of {formData.name || 'this area'}. Asset positions are automatically synced.</p>
+            <p className="text-sm text-gray-500 italic">Drag and drop assets to configure the physical layout of {formData.name || 'this line'}. Asset positions are automatically synced.</p>
           </div>
           
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden p-4">
-             <AreaLayoutEditor areaId={id as string} />
+             <LineLayoutEditor lineId={id as string} />
           </div>
         </div>
 
